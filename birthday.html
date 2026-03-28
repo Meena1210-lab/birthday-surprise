@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>🎁 Birthday Surprise</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+    font-family: Arial;
+}
+
+/* Image */
+#bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: none;
+}
+
+/* Center */
+#app {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+/* Button */
+button {
+    padding: 14px 28px;
+    background: gold;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* Countdown */
+.count {
+    font-size: 110px;
+    color: gold;
+    animation: pop 0.8s ease;
+}
+
+@keyframes pop {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* 🎈 Balloons */
+.balloon {
+    position: fixed;
+    bottom: -150px;
+    border-radius: 50% 50% 45% 45%;
+    box-shadow: inset -8px -15px 25px rgba(0,0,0,0.4);
+}
+
+/* Shine */
+.balloon::before {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 18px;
+    background: rgba(255,255,255,0.6);
+    border-radius: 50%;
+    top: 12px;
+    left: 10px;
+}
+
+/* String */
+.balloon::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 50px;
+    background: rgba(255,255,255,0.7);
+    left: 50%;
+    top: 65px;
+}
+
+/* Float animation */
+@keyframes floatUp {
+    0% { transform: translateY(0) translateX(0); }
+    50% { transform: translateY(-50vh) translateX(20px); }
+    100% { transform: translateY(-120vh) translateX(-20px); }
+}
+</style>
+</head>
+
+<body>
+
+<!-- 🖼️ IMAGE -->
+<img src="photo.jpg" id="bg">
+
+<!-- 🎵 YOUR MUSIC -->
+<audio id="music" loop>
+  <source src="music.mp3" type="audio/mpeg">
+</audio>
+
+<div id="app">
+    <button onclick="start()">Tap to Begin 🎁</button>
+</div>
+
+<script>
+
+function start() {
+    let music = document.getElementById("music");
+
+    // Play music on click
+    music.currentTime = 0;
+    music.play().catch(()=>{});
+
+    countdown();
+}
+
+/* Countdown */
+function countdown() {
+    let app = document.getElementById("app");
+    let count = 3;
+
+    let interval = setInterval(() => {
+        app.innerHTML = "<div class='count'>" + count + "</div>";
+        count--;
+
+        if (count < 0) {
+            clearInterval(interval);
+            reveal();
+        }
+    }, 1000);
+}
+
+/* Reveal */
+function reveal() {
+    document.getElementById("bg").style.display = "block";
+    document.getElementById("app").innerHTML = "";
+
+    createBalloons();
+}
+
+/* 🎈 Balloons (Gold + White, SIDE ONLY) */
+function createBalloons() {
+
+    const colors = [
+        "radial-gradient(circle at 30% 30%, #fff2b0, gold)",
+        "radial-gradient(circle at 30% 30%, #ffffff, #dddddd)"
+    ];
+
+    for (let i = 0; i < 20; i++) {
+
+        let b = document.createElement("div");
+        b.className = "balloon";
+
+        let size = Math.random()*25 + 40;
+        b.style.width = size + "px";
+        b.style.height = size + 15 + "px";
+
+        // LEFT or RIGHT ONLY
+        if (Math.random() < 0.5) {
+            b.style.left = Math.random()*20 + "vw";
+        } else {
+            b.style.left = (80 + Math.random()*20) + "vw";
+        }
+
+        b.style.background = colors[Math.floor(Math.random()*2)];
+
+        b.style.animation = `floatUp ${Math.random()*4+5}s linear infinite`;
+
+        document.body.appendChild(b);
+    }
+}
+
+</script>
+
+</body>
+</html>
